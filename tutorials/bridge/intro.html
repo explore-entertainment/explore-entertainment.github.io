@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+
+	<!--- basic page needs
+    ================================================== -->
+	<meta charset="utf-8">
+	<title>Page - Keep It Simple</title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<!-- mobile specific metas
+    ================================================== -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- CSS
+    ================================================== -->
+	<link rel="stylesheet" href="../../css/base.css">
+	<link rel="stylesheet" href="../../css/main.css">
+
+	<!-- script
+    ================================================== -->
+	<script src="js/modernizr.js"></script>
+	<script defer src="js/fontawesome/all.min.js"></script>
+
+	<!-- favicons
+    ================================================== -->
+	<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+	<link rel="manifest" href="site.webmanifest">
+
+</head>
+
+<body id="top">
+
+	<!-- preloader
+    ================================================== -->
+	<div id="preloader">
+		<div id="loader" class="dots-fade">
+			<div></div>
+			<div></div>
+			<div></div>
+		</div>
+	</div>
+
+	<!-- Header
+    ================================================== -->
+	<header class="s-header">
+
+		<div class="row">
+
+			<div class="s-header__content column">
+				<h1 class="s-header__logotext">
+					<a href="index.html" title="">Explore Entertainment</a>
+				</h1>
+				<p class="s-header__tagline">Finding the Fun</p>
+			</div>
+
+		</div> <!-- end row -->
+
+		<nav class="s-header__nav-wrap">
+
+			<div class="row">
+
+				<ul class="s-header__nav">
+					<li><a href="../../index.html">Home</a></li>
+					<li class="has-children"><a href="#0">Games</a>
+						<ul>
+							<li><a href="#0">Submenu 01</a></li>
+							<li><a href="#0">Submenu 02</a></li>
+							<li><a href="#0">Submenu 03</a></li>
+						</ul>
+					</li>
+					<li class="has-children current"><a href="#0">Tutorials</a>
+						<ul>
+							<li><a href="tutorials/bridge/intro.html">Bridging the Gap</a></li>
+							<!-- <li><a href="single.html">Single Blog</a></li> -->
+						</ul>
+					</li>
+					<li><a href="archives.html">About</a></li>
+					<li><a href="page.html">Donate</a></li>
+				</ul> <!-- end #nav -->
+
+			</div>
+
+		</nav> <!-- end #nav-wrap -->
+
+		<a class="header-menu-toggle" href="#0" title="Menu"><span>Menu</span></a>
+
+	</header> <!-- Header End -->
+
+	<!-- Content
+    ================================================== -->
+	<div class="s-content">
+
+		<div class="row">
+
+			<div id="main" class="s-content__main large-8 column">
+
+				<section class="page-content">
+
+					<h2 class="page-content__title h1">Bridging the Gap</h2>
+
+					<p class="lead">
+						What comes after "Hello World"?
+					</p>
+
+					<p>
+						The internet is full of countless tutorials for game development.
+						Many are "for beginners"—they cover setting up a development environment,
+						getting started writing code in whatever language, and rendering simple graphics.
+						There are also plenty of advanced tutorials covering specific features, or rendering
+						techniques, or design patterns. But there's a big gap between the two groups. Many
+						beginners have trouble going from "Hello World" to being able to use that fancy
+						rendering technique or design pattern. This series is an attempt to help bridge that gap.
+					</p>
+
+					<p>
+						In Bridging the Gap, I start by showing how to write a simple game with direct,
+						straightforward code. Then I'll show you how to start refining that code into a library
+						of tools you can use to make another game more easily. Because that's step two: Another Game.
+						We'll add some more features to our budding game library, as well as adding structure
+						with new systems and design patterns.
+					</p>
+
+					<p>
+						And after that? You guessed it! Another Game.
+						And another, and another, and another. Each game will build on the tools we created
+						in the previous one. At the end of the road, we'll have made a capable game library
+						you can use to continue making better games. And you'll know it's capable because you'll
+						have already used it to make a dozen different games.
+					</p>
+
+					<h5>What This Is</h5>
+					<p>
+						Bridging the Gap is a tutorial series about the design and architecture of
+						gaming software. Its target audience is aspiring game programmers who have
+						run into The Gap. If you've gone through the Hello World tutorials,
+						you've gotten your first triangle rendered, you've tried making a complete game,
+						but your code keeps getting unusably tangled—congratulations! You're
+						the person I wrote this for.
+					</p>
+
+					<h5>What This Isn't</h5>
+					<p>
+						This is NOT a Hello World tutorial of its own. If you've never written
+						a line of code before, this series will NOT teach you how to do that.
+						I won't cover setting up your environment or managing dependencies.
+						I won't teach you everything about how OpenGL works or how to deploy a game.
+						This series is also not about producing art assets or sound effects
+						or music. This series is for coders who would like to write better code.
+					</p>
+
+					<h5>Technologies</h5>
+					<p>
+						This series uses Java as the programming language and OpenGL for rendering.
+						I use IntelliJ IDEA as my development environment because that's what Android
+						Studio is. When I want to make a mobile game I don't have to change my workflow.
+					</p>
+					<p>
+						I use JOGL for OpenGL bindings in Java. It seems like LWJGL is more popular,
+						But I just don't like it. I found it much easier to get started with JOGL,
+						and JOGL makes it easy to have multiple windows with a shared GL context.
+					</p>
+
+				</section> <!-- end page -->
+
+			</div> <!-- end main -->
+
+
+			<div id="sidebar" class="s-content__sidebar large-4 column">
+
+				<div class="widget widget--search">
+					<h3 class="h6">Search</h3>
+					<form action="#0">
+						<input type="text" value="Search here..."
+							onblur="if(this.value == '') { this.value = 'Search here...'; }"
+							onfocus="if (this.value == 'Search here...') { this.value = ''; }" class="text-search">
+						<input type="submit" value="" class="submit-search">
+					</form>
+				</div>
+
+				<div class="widget widget--categories">
+					<h3 class="h6">Categories.</h3>
+					<ul>
+						<li><a href="#0" title="">Wordpress</a> (2)</li>
+						<li><a href="#0" title="">Ghost</a> (14)</li>
+						<li><a href="#0" title="">Joomla</a> (5)</li>
+						<li><a href="#0" title="">Drupal</a> (3)</li>
+						<li><a href="#0" title="">Magento</a> (2)</li>
+						<li><a href="#0" title="">Uncategorized</a> (9)</li>
+					</ul>
+				</div>
+
+				<div class="widget widget_text group">
+					<h3 class="h6">Widget Text.</h3>
+
+					<p>
+						Lorem ipsum Ullamco commodo laboris sit dolore commodo aliquip incididunt fugiat esse dolor
+						aute fugiat minim eiusmod do velit labore fugiat officia ad sit culpa labore in consectetur
+						sint cillum sint consectetur voluptate adipisicing Duis irure magna ut sit amet reprehenderit.
+					</p>
+				</div>
+
+				<div class="widget widget_tags">
+					<h3 class="h6">Post Tags.</h3>
+
+					<div class="tagcloud group">
+						<a href="#0">Corporate</a>
+						<a href="#0">Onepage</a>
+						<a href="#0">Agency</a>
+						<a href="#0">Multipurpose</a>
+						<a href="#0">Blog</a>
+						<a href="#0">Landing Page</a>
+						<a href="#0">Resume</a>
+					</div>
+				</div>
+
+				<div class="widget widget_popular">
+					<h3 class="h6">Popular Post.</h3>
+
+					<ul class="link-list">
+						<li><a href="#0">Sint cillum consectetur voluptate.</a></li>
+						<li><a href="#0">Lorem ipsum Ullamco commodo.</a></li>
+						<li><a href="#0">Fugiat minim eiusmod do.</a></li>
+					</ul>
+				</div>
+
+			</div> <!-- end sidebar -->
+
+		</div> <!-- end row -->
+
+	</div> <!-- end content-wrap -->
+
+
+	<!-- Footer
+    ================================================== -->
+	<footer class="s-footer">
+
+		<div class="row s-footer__top">
+			<div class="column">
+				<ul class="s-footer__social">
+					<li><a href="#0"><i class="fab fa-facebook-f" aria-hidden="true"></i></a></li>
+					<li><a href="#0"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
+					<li><a href="#0"><i class="fab fa-youtube" aria-hidden="true"></i></a></li>
+					<li><a href="#0"><i class="fab fa-vimeo-v" aria-hidden="true"></i></a></li>
+					<li><a href="#0"><i class="fab fa-instagram" aria-hidden="true"></i></a></li>
+					<li><a href="#0"><i class="fab fa-linkedin" aria-hidden="true"></i></a></li>
+					<li><a href="#0"><i class="fab fa-skype" aria-hidden="true"></i></a></li>
+				</ul>
+			</div>
+		</div> <!-- end footer__top -->
+
+		<div class="row s-footer__bottom">
+
+			<div class="large-6 tab-full column s-footer__info">
+				<h3 class="h6">About Keep It Simple</h3>
+
+				<p>
+					Lorem ipsum Ullamco commodo laboris sit dolore commodo aliquip incididunt fugiat esse dolor
+					aute fugiat minim eiusmod do velit labore fugiat officia ad sit culpa labore in consectetur
+					sint cillum sint consectetur voluptate adipisicing Duis
+				</p>
+
+				<p>
+					Lorem ipsum Sed nulla deserunt voluptate elit occaecat culpa cupidatat sit irure sint
+					sint incididunt cupidatat esse in Ut sed commodo tempor consequat culpa fugiat incididunt.
+				</p>
+			</div>
+
+			<div class="large-6 tab-full column">
+				<div class="row">
+					<div class="large-8 tab-full column">
+
+						<h3 class="h6">Photostream</h3>
+
+						<ul class="photostream group">
+							<li><a href="#0"><img alt="thumbnail" src="images/thumb.jpg"></a></li>
+							<li><a href="#0"><img alt="thumbnail" src="images/thumb.jpg"></a></li>
+							<li><a href="#0"><img alt="thumbnail" src="images/thumb.jpg"></a></li>
+							<li><a href="#0"><img alt="thumbnail" src="images/thumb.jpg"></a></li>
+							<li><a href="#0"><img alt="thumbnail" src="images/thumb.jpg"></a></li>
+							<li><a href="#0"><img alt="thumbnail" src="images/thumb.jpg"></a></li>
+							<li><a href="#0"><img alt="thumbnail" src="images/thumb.jpg"></a></li>
+							<li><a href="#0"><img alt="thumbnail" src="images/thumb.jpg"></a></li>
+						</ul>
+
+					</div>
+
+					<div class="large-4 tab-full column">
+						<h3 class="h6">Navigate</h3>
+
+						<ul class="s-footer__list s-footer-list--nav group">
+							<li><a href="#0">Home</a></li>
+							<li><a href="#0">Blog</a></li>
+							<li><a href="#0">Demo</a></li>
+							<li><a href="#0">Archives</a></li>
+							<li><a href="#0">About</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="ss-copyright">
+				<span>© Copyright Keep It Simple 2019</span>
+				<span>Design by <a href="https://www.styleshout.com/">StyleShout</a></span>
+			</div>
+
+		</div> <!-- end footer__bottom -->
+
+
+		<div class="ss-go-top">
+			<a class="smoothscroll" title="Back to Top" href="#top">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+					<path d="M12 0l8 9h-6v15h-4v-15h-6z" />
+				</svg>
+			</a>
+		</div> <!-- end ss-go-top -->
+
+	</footer> <!-- end Footer-->
+
+
+	<!-- Java Script
+    ================================================== -->
+	<script src="js/jquery-3.2.1.min.js"></script>
+	<script src="js/main.js"></script>
+
+</body>
+
+</html>
