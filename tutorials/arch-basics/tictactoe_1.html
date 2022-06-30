@@ -6,7 +6,7 @@
 	<!--- basic page needs
     ================================================== -->
 	<meta charset="utf-8">
-	<title>Page - Keep It Simple</title>
+	<title>Ultimate Tic Tac Toe - Explore Entertainment</title>
 	<meta name="description" content="">
 	<meta name="author" content="">
 
@@ -75,7 +75,7 @@
 					</li>
 					<li class="has-children current"><a href="#0">Tutorials</a>
 						<ul>
-							<li><a href="tutorials/bridge/intro.html">Bridging the Gap</a></li>
+							<li><a href="tutorials/arch-basics/intro.html">Game Architecture Basics</a></li>
 							<!-- <li><a href="single.html">Single Blog</a></li> -->
 						</ul>
 					</li>
@@ -101,72 +101,159 @@
 
 				<section class="page-content">
 
-					<h2 class="page-content__title h1">Bridging the Gap</h2>
+					<h2 class="page-content__title h1">Game Architecture Basics</h2>
 
-					<p class="lead">
-						What comes after "Hello World"?
+					<h3>
+						Chapter 1 — Ultimate Tic Tac Toe
+					</h3>
+
+					<p>
+						I wanted to start this series with the simplest game I could think of. That was
+						Tic Tac Toe (or Noughts and Crosses outside the US.) But that isn't a very fun
+						game, and it's not very satisfying to create. So instead we'll be taking an extra
+						little step by starting with Ultimate Tic Tac Toe. It has some actual strategic depth
+						compared to the classic game with only a tiny bit more complexity.
 					</p>
 
 					<p>
-						The internet is full of countless tutorials for game development.
-						Many are "for beginners"—they cover setting up a development environment,
-						getting started writing code in whatever language, and rendering simple graphics.
-						There are also plenty of advanced tutorials covering specific features, or rendering
-						techniques, or design patterns. But there's a big gap between the two groups. Many
-						beginners have trouble going from "Hello World" to being able to use that fancy
-						rendering technique or design pattern. This series is an attempt to help bridge that gap.
+						Ultimate Tic Tac Toe starts with the familiar 3x3 grid in which two players alternately
+						place their marks: Xs and Os respectively. But in Ultimate TicTacToe, each square in the
+						grid actually contains a smaller 3x3 grid. The first starts by marking an X in one square in
+						any of the nine smaller grids that they choose. Turns alternate as normal, but each player
+						must place their mark in the grid that corresponds to the square that was marked in the pervious
+						player's turn. Each grid plays as a regular game of Tic Tac Toe. When a grid is won
+						by one of the players, it becomes that player's mark in the larger game. If a
+						player would be required to play a turn in a completed grid, they instead play in
+						any uncompleted grid without restriction. The game is won when a player wins the
+						larger game; which is, by winning three in a row of the smaller grids.
 					</p>
 
-					<p>
-						In Bridging the Gap, I start by showing how to write a simple game with direct,
-						straightforward code. Then I'll show you how to start refining that code into a library
-						of tools you can use to make another game more easily. Because that's step two: Another Game.
-						We'll add some more features to our budding game library, as well as adding structure
-						with new systems and design patterns.
-					</p>
+					<section class="page-content">
+						<h5>Project Setup</h5>
+						<p>
+							I'll start by creating a new Maven project in IntelliJ called<br />game-architecture-basics.
+							The plan is to create a submodule for each game in the series, so go ahead and add one
+							now called tictactoe. All game-specific code goes in the src folder
+							for that game. As we work through the series we'll pull out as much general-purpose
+							code as we can and put it into the main module's src folder. In that way, we'll
+							be building up a library of useful tools as we build each game.
+						</p>
+						<p>
+							Next we need to include the necessary dependencies for using OpenGL to render into
+							a window. JOGL provides multiple options out-of-the-box for creating windows
+							and surfaces, so we'll use that. Add the dependencies block to the parent module's
+							pom.xml file:
+						</p>
 
-					<p>
-						And after that? You guessed it! Another Game.
-						And another, and another, and another. Each game will build on the tools we created
-						in the previous one. At the end of the road, we'll have made a capable game library
-						you can use to continue making better games. And you'll know it's capable because you'll
-						have already used it to make a dozen different games.
-					</p>
+						<code>&lt;dependencies&gt;
+	&lt;dependency&gt;
+		&lt;groupId&gt;org.jogamp.jogl&lt;/groupId&gt;
+		&lt;artifactId&gt;jogl-all-main&lt;/artifactId&gt;
+		&lt;version&gt;2.3.2&lt;/version&gt;
+	&lt;/dependency&gt;
+	&lt;dependency&gt;
+		&lt;groupId&gt;org.jogamp.gluegen&lt;/groupId&gt;
+		&lt;artifactId&gt;gluegen-rt-main&lt;/artifactId&gt;
+		&lt;version&gt;2.3.2&lt;/version&gt;
+	&lt;/dependency&gt;
+&lt;/dependencies&gt;</code>
+					</section>
 
-					<h5>What This Is</h5>
-					<p>
-						Bridging the Gap is a tutorial series about the design and architecture of
-						gaming software. Its target audience is aspiring game programmers who have
-						run into The Gap. If you've gone through the Hello World tutorials,
-						you've gotten your first triangle rendered, you've tried making a complete game,
-						but your code keeps getting unusably tangled—congratulations! You're
-						the person I wrote this for.
-					</p>
+					<section class="page-content">
+						<h5>Creating a Window</h5>
+						<p>
+							Now we're ready to start writing code! Create a package in your tictactoe project
+							with a class called TicTacToeGame:
+						</p>
+						<code>public class TicTacToeGame {
+	private GLWindow window;
+	private FPSAnimator animator;
 
-					<h5>What This Isn't</h5>
-					<p>
-						This is NOT a Hello World tutorial of its own. If you've never written
-						a line of code before, this series will NOT teach you how to do that.
-						I won't cover setting up your environment or managing dependencies.
-						I won't teach you everything about how OpenGL works or how to deploy a game.
-						This series is also not about producing art assets or sound effects
-						or music. This series is for coders who would like to write better code.
-					</p>
+	public TicTacToeGame() {
+		// JOGL uses profiles to represent the capabilities
+		// in particular versions of OpenGL.
+		// I'm using the GL4ES3 profile, which includes
+		// everything in OpenGL 4 that is also in OpenGL ES 3.
+		GLProfile profile = GLProfile.getGL4ES3();
+		
+		// the capabilities object allows you to request particular
+		// features. I'm just using the defaults for this profile.
+		GLCapabilities caps = new GLCapabilities(profile);
+		
+		// create a window with the requested capabilities and
+		// configure it
+		window = GLWindow.create(caps);
+		window.setTitle("Ultimate TicTacToe");
+		window.setSize(600, 800);
 
-					<h5>Technologies</h5>
-					<p>
-						This series uses Java as the programming language and OpenGL for rendering.
-						I use IntelliJ IDEA as my development environment because that's what Android
-						Studio is. When I want to make a mobile game I don't have to change my workflow.
-					</p>
-					<p>
-						I use JOGL for OpenGL bindings in Java. It seems like LWJGL is more popular,
-						But I just don't like it. I found it much easier to get started with JOGL,
-						and JOGL makes it easy to have multiple windows with a shared GL context.
-					</p>
+		// a FPSAnimator is used to automatically trigger rendering
+		// at a particular framerate
+		animator = new FPSAnimator(window, 60, true);
+		window.setVisible(true);
+		animator.start();
+	}
 
-				</section> <!-- end page -->
+	public static void main(String[] args) {
+		TicTacToeGame game = new TicTacToeGame();
+	}
+}
+</code><br />
+						<p>
+							You should be able to run this program and get a window with a black background.
+							But if you close the window, you may notice that the program doesn't actually
+							stop completely. IntelliJ shows that it can still be stopped manually:
+						</p>
+						<p>
+							[INSERT PHOTO HERE]
+						</p>
+						<p>
+							This is because we started a FPSAnimator, which uses a thread to repeatedly
+							update the window. Since we never actually stopped the animator, we've leaked
+							a thread that will never die on its own. Let's stop it manually by clicking that
+							Stop button and then fix the problem.
+						</p>
+						<p>
+							All we have to do is call stop() on the Animator when the window is closing.
+							To receive notification of that we'll have the game class implement the
+							WindowListener interface and add it to the window. (Make sure you use the
+							WindowListener in com.jogamp.newt.event, not the one in java.awt.event.) Implement
+							all the interface's methods and call stop() on the animator inside
+							windowDestroyNotify().
+						</p>
+						<code>public class TicTacToeGame implements WindowListener {
 
+...
+
+// add this when configuring the window
+window.addWindowListener(this);
+
+...
+
+@Override
+public void windowDestroyNotify(WindowEvent e) {
+	animator.stop();
+}
+</code><br />
+
+						<p>
+							Now when we run the game and close the window it should completely kill the
+							program.
+						</p>
+					</section>
+
+					<nav class="pgn">
+						<ul>
+							<li><span class="pgn__num current">1</span></li>
+							<li><a class="pgn__num" href="tictactoe_2.html">2</a></li>
+							<li><a class="pgn__num" href="#0">3</a></li>
+							<li><a class="pgn__num" href="#0">4</a></li>
+							<li><a class="pgn__num" href="#0">5</a></li>
+							<li><span class="pgn__num dots">…</span></li>
+							<li><a class="pgn__num" href="#0">8</a></li>
+							<li><a class="pgn__next" href="#0">Next</a></li>
+						</ul>
+					</nav>
+	
 			</div> <!-- end main -->
 
 
@@ -183,14 +270,14 @@
 				</div>
 
 				<div class="widget widget--categories">
-					<h3 class="h6">Categories.</h3>
+					<h3 class="h6">Chapters</h3>
 					<ul>
-						<li><a href="#0" title="">Wordpress</a> (2)</li>
-						<li><a href="#0" title="">Ghost</a> (14)</li>
+						<li><a href="#0" title="">Ultimate Tic Tac Toe</a></li>
+						<!-- <li><a href="#0" title="">Ghost</a> (14)</li>
 						<li><a href="#0" title="">Joomla</a> (5)</li>
 						<li><a href="#0" title="">Drupal</a> (3)</li>
 						<li><a href="#0" title="">Magento</a> (2)</li>
-						<li><a href="#0" title="">Uncategorized</a> (9)</li>
+						<li><a href="#0" title="">Uncategorized</a> (9)</li> -->
 					</ul>
 				</div>
 

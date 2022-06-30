@@ -332,11 +332,13 @@ code {
     font-size: 1.4rem;
     margin: 0 .2rem;
     padding: .4rem .8rem;
-    white-space: nowrap;
+    white-space: pre;
+	display: block;
     background: #efefef;
     border: 1px solid #d3d3d3;
     color: #272727;
     border-radius: 3px;
+	overflow-x: scroll;
 }
 
 pre>code {
