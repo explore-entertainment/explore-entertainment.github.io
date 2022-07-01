@@ -75,7 +75,7 @@
 					</li>
 					<li class="has-children current"><a href="#0">Tutorials</a>
 						<ul>
-							<li><a href="tutorials/arch-basics/intro.html">Game Architecture Basics</a></li>
+							<li><a href="intro.html">Game Architecture Basics</a></li>
 							<!-- <li><a href="single.html">Single Blog</a></li> -->
 						</ul>
 					</li>
@@ -162,7 +162,7 @@
 						Maven provides dependendy management.
 					</p>
 					<p>
-						I use JOGL for OpenGL bindings in Java.  LWJGL seems more popular, but more limited.
+						I use JOGL for OpenGL bindings in Java. LWJGL seems more popular, but more limited.
 						JOGL makes window creation very simple and allows for multiple windows that can
 						share GL resources—a very useful feature for creating tools like map editors
 						and scene viewers.
@@ -170,21 +170,102 @@
 
 					<h5>Priorities</h5>
 					<p>
-						A famous idea in project management is called the Iron Triangle: how do you balance
-						Time vs. Cost vs. Scope?  If one grows longer or shorter, at least one of the other
-						sides must do the opposite.  Choosing your priorities is crucial to the success
-						of your project.
+						A famous idea in project management is called the Iron Triangle: the sides of a triangle
+						are labeled Time, Cost, and Scope. If one side grows longer or shorter, at least one
+						of the other sides has to compensate. So we have to choose to prioritize the sides
+						that are most important for the project's success and accept that the other sides
+						have to be adjusted accordingly. People have come up with other labels for the
+						triangle, but this is the core idea: start with the goals that are most important
+						and accept that everything else has to compensate in some way.
 					</p>
 					<p>
 						This tutorial series is meant to demonstrate simple design principles that can be
-						used by less-experienced programmers to help them make games more easily.  So my first
-						priorities will be <em>simplicity</em> and <em>usefulness</em>.  It may seem
-						natural to ask "what about performance?"  But new game developers (really <em>most</em>
-						game developers) don't need to worry about hitting thre bleeding edge of performance.
-						Just finishing a game is difficult enough.  If you get to that point and still need
-						to worry about performance, <em>congratulations!</em>  You've won.  You've accomplished
-						more in a very difficult field than most who set out on this road.  So this series
+						used by less-experienced programmers to help them make games more easily. So my first
+						priorities will be <strong>Simplicity</strong> and <strong>Usefulness</strong>. If
+						you're worried about performance: don't. New game developers (really <em>most</em>
+						game developers) don't need to worry about hitting the bleeding edge of performance.
+						Just finishing a game is difficult enough. If you get to that point and still need
+						to worry about performance, <em>congratulations!</em> You've won. You've accomplished
+						more in a very difficult field than most who set out on this road. So this series
 						is only concerned with helping you get to that point.
+					</p>
+
+					<h5>Design Principles</h5>
+					<p>
+						These tutorials teach code design and architecture, so I need to go over some
+						of the basic principles we'll use to guide our decisions.  Even if you don't
+						end up using the exact same architecture I build here, following these principles
+						will be a huge help in developing your own systems.  Some of these come from
+						courses named things like Object-Oriented Programming and Design because OOP
+						seems to be the default these days.  It isn't, and these principles are still
+						sound if you work in other paradigms; and I'll take ideas from other paradigms
+						as well.
+
+						<h6>Abstraction</h6>
+						If you take away nothing else from this series, learn this.  Abstraction is
+						the cornerstone of everything in computing.  It's all about hiding details
+						behind an interface that's easier to understand.  Computers are machines that
+						process <em>machine code</em>, which is expressed in binary.  Binary is hard
+						to understand, so assembly languages were created to make it easier.  Assembly
+						is still hard to understand, so higher-level languages were invented, like C
+						and FORTRAN.  You still had to write specific code for specific machines, so
+						operating systems were created, like DOS and UNIX.  You still had to write
+						specific code for particular devices, so device drivers were created.  You
+						still had to write specific code for each operating system, so platforms were
+						created (like the JVM and Microsoft's .Net platform.) These technologies are
+						all stacked up on top of the binary code that was hard to use. Each of these
+						things is still there; they're just hidden behind abstractions.
+
+						<h6>Single Responsibility</h6>
+						This goes hand-in-hand with abstraction.  The idea is that every distinct
+						<em>thing</em> you create should serve a single purpose.  It should have
+						one single responsibility.  It's the scope of those responsibilities that
+						will change.  And it's still just a stack of abstractions.  At the top of
+						the stack is our Game class.  It's responsible for running the game and
+						nothing else.  It does that by using a Rendering system, an Input system,
+						an Audio system, etc.  Each of these systems does only one thing.  To do that
+						they're composed of smaller parts that each do only one thing.  Get the idea?
+						This goes all the way down to the lowest levels of our code.  When you create
+						a new class, make sure it does only one thing.  When you write a new function,
+						make sure it only does one thing.
+
+						<h6>Code Reuse</h6>
+						This one is also known as Don't Repeat Yourself.  If you find yourself writing
+						a chunk of code you've written before <em>in a similar context</em>, it's time
+						to refactor.  Tuck away that duplicate code in a function and call the function
+						in its place.  If that isn't easy to do, you're probably
+						looking at a good place to add a new abstraction <em>or it's a symptom of poor
+						design choices.</em>  But remember that note above about a similar context.
+						You'll end up writing many, many <samp>for</samp> loops, for example.   That
+						doesn't mean you need to figure out how create a single abstraction so that
+						you never have to write another <samp>for</samp> loop again.  Otherwise we
+						would already have that abstraction.  But if you're writing multiple <samp>for</samp>
+						loops to iterate over the same structure, that can almost certainly be hidden
+						in an abstraction.
+
+						<h6>Inheritance and Composition</h6>
+						Don't think that this principle is less important because it's at the bottom
+						of the list.  This is a vitally important idea on its own, and also because of how
+						programming is taught in schools (at least when I was in school.)  The way
+						inheritance was taught when I was first learning, it seemed like the magic hammer.
+						Need to create an abstraction?  Design an elaborate class heirearchy.  Need to
+						clean up some code duplication?  Put it in a base class and extend it to reuse that 
+						code.  This line of thinking is BAD BAD BAD.  Inheritance is <em>usually</em>
+						the wrong tool for the job.  I don't care what the job is. You can probably solve
+						it in a better way without inheritance.
+						<br/><br/>
+						So what do you use instead?  Composition.  This is just a fancy word that means
+						<em>Have your object contain the things it needs.</em>  Rather than extending
+						a base class to reuse some bit of functionality, put it in its own class and
+						then just use an object of that class.  This makes for better single responsibility;
+						more abstract abstractions; and easier code reuse.
+					</p>
+
+					<h5>Assets</h5>
+					<p>
+						I said above that these tutorials won't teach you how to create art assets. My examples
+						will use art provided by <a href="https://www.kenney.nl">Kenney</a>.  He's created
+						lots of 2D and 3D art and provides nearly all of it for free.  How cool is that??
 					</p>
 
 					<h5>Enough Words</h5>

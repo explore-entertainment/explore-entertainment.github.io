@@ -75,7 +75,7 @@
 					</li>
 					<li class="has-children current"><a href="#0">Tutorials</a>
 						<ul>
-							<li><a href="tutorials/arch-basics/intro.html">Game Architecture Basics</a></li>
+							<li><a href="intro.html">Game Architecture Basics</a></li>
 							<!-- <li><a href="single.html">Single Blog</a></li> -->
 						</ul>
 					</li>
@@ -175,17 +175,17 @@ public void dispose(GLAutoDrawable drawable) {
 						And to make sure that the animator is constantly updating the screen
 						we'll cycle the clear color between red and black.
 					</p>
-<code>GL4ES3 gl = drawable.getGL().getGL4ES3();
+					<code>GL4ES3 gl = drawable.getGL().getGL4ES3();
 float i = (float) Math.sin(System.nanoTime() * 0.000000001) * 0.5f + 0.5f;
 gl.glClearColor(i, 0, 0, 0);
 gl.glClear(GL.GL_COLOR_BUFFER_BIT);
-</code><br/>
+</code><br />
 				</section>
 
 				<section class="page-content">
 					<h5>Rendering Vertices</h5>
 					<p>
-						Now we're ready to dive into rendering vertices.  We'll create a Vertex
+						Now we're ready to dive into rendering vertices. We'll create a Vertex
 						Buffer Object to store vertex data, and we'll use a Vertex Array Object
 						to inform OpenGL about the format and layout of that data.
 					</p>
@@ -193,17 +193,17 @@ gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 					<p>
 						What we've written so far has been straightforward procedural-style code to
 						get the project started, but now we have our first real opportunity to talk
-						about architecture.  It's easy to see that vertex buffers and vertex arrays
+						about architecture. It's easy to see that vertex buffers and vertex arrays
 						are great constructs to wrap inside classes: they have data to be tracked and require
 						operations to be performed on that data; they're easy to encapsulate and have
 						very little dependence on outside code or data; and we'll be reusing them a lot.
 					</p>
 
 					<p>
-						We'll create these classes in the game-architecture-basics project.  These are
-						the first tools we'll create in our toolbox.  First off is the VertexBuffer class.
+						We'll create these classes in the game-architecture-basics project. These are
+						the first tools we'll create in our toolbox. First off is the VertexBuffer class.
 					</p>
-<code>public class VertexBuffer {
+					<code>public class VertexBuffer {
 	private int glId;
 	private int target;
 	private int usageHint;
@@ -212,9 +212,6 @@ gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		this.target = target;
 		this.usageHint = usageHint;
 
-		// JOGL tries to match the C interface to OpenGL the best it can,
-		// so functions like glGenBuffers take parameters for count, array, and offset
-		// to return the generated values
 		int[] r = new int[1];
 		gl.glGenBuffers(1, r, 0);
 		glId = r[0];
@@ -237,7 +234,12 @@ gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 			glId = 0;
 		}
 	}
-}</code><br/>
+}</code><br />
+
+					<p>
+						And then the VertexArray class.
+					</p>
+<code></code>
 				</section>
 
 				<nav class="pgn">
