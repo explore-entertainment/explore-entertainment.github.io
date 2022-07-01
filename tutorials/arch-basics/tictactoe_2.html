@@ -190,25 +190,50 @@ gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 						to inform OpenGL about the format and layout of that data.
 					</p>
 
+					<h6>But first...</h6>
 					<p>
 						What we've written so far has been straightforward procedural-style code to
 						get the project started, but now we have our first real opportunity to talk
-						about architecture. It's easy to see that vertex buffers and vertex arrays
-						are great constructs to wrap inside classes: they have data to be tracked and require
-						operations to be performed on that data; they're easy to encapsulate and have
-						very little dependence on outside code or data; and we'll be reusing them a lot.
+						about architecture. We want to build a rendering system that handles all of the
+						rendering in the game and nothing else. That system will live in the
+						game-architecture-basics module. It'll end up being the largest system in our
+						game library.
 					</p>
-
 					<p>
-						We'll create these classes in the game-architecture-basics project. These are
-						the first tools we'll create in our toolbox. First off is the VertexBuffer class.
+						When designing things we generally either start at the top (the big picture view)
+						or the bottom (the small details). For a project like this I think it's important
+						to understand how the details work before organizing them into larger components,
+						so we'll start at the bottom for now. (Though it's common to work from both ends
+						as well.) It makes a lot of sense because those bottom-level details are what you
+						learn from beginner tutorials, and I'm writing this for the people who have done
+						those and aren't sure what to do next.
+					</p>
+					<p>
+						So: vertex buffers and vertex arrays. It's easy to see that these are great
+						constructs to wrap inside classes: they have data to be tracked and require
+						operations to be performed on that data; they're easy to encapsulate and have
+						very little dependence on the outside world; and we'll be reusing them a lot.
+						These are the first tools we'll put in our toolbox.
+					</p>
+					<p>
+						First off is the VertexBuffer class. It goes in the game-architecture-basics
+						module in our project. I've included the basic operations we'll want to do
+						with a vertex buffer: binding and unbinding, putting new data into it, and
+						deleting it. All these methods take the GL object as an argument to help
+						signal that they should only occur on the render thread. I also indicate that
+						in the Javadocs for each method. <em>This is the last time I'll show those
+							comments in the tutorial text, but you can assume I'll put that on every
+							method that makes calls to OpenGL!</em>
 					</p>
 					<code>public class VertexBuffer {
 	private int glId;
 	private int target;
 	private int usageHint;
 
-	public VertexBuffer(GL4ES3 gl, ByteBuffer data, int target, int usageHint) {
+	/**
+	* Only call on the render thread!
+	*/
+	public VertexBuffer(GL4ES3 gl, Buffer data, int target, int usageHint) {
 		this.target = target;
 		this.usageHint = usageHint;
 
@@ -220,14 +245,32 @@ gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		unbind(gl);
 	}
 
+	/**
+	* Only call on the render thread!
+	*/
+	public void update(GL4ES3 gl, int offset, int size, Buffer data) {
+		bind(gl);
+		gl.glBufferSubData(target, offset, size, data);
+		unbind(gl);
+	}
+
+	/**
+	* Only call on the render thread!
+	*/
 	public void bind(GL4ES3 gl) {
 		gl.glBindBuffer(target, glId);
 	}
 
+	/**
+	* Only call on the render thread!
+	*/
 	public void unbind(GL4ES3 gl) {
 		gl.glBindBuffer(target, 0);
 	}
 	
+	/**
+	* Only call on the render thread!
+	*/
 	public void delete(GL4ES3 gl) {
 		if (glId > 0) {
 			gl.glDeleteBuffers(1, new int[]{glId}, 0);
@@ -237,9 +280,76 @@ gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 }</code><br />
 
 					<p>
-						And then the VertexArray class.
+						And the VertexArray class.
 					</p>
-<code></code>
+					<code>public class VertexArray {
+	private int glId;
+
+	public VertexArray(GL4ES3 gl) {
+		int[] r = new int[1];
+		gl.glGenVertexArrays(1, r, 0);
+		glId = r[0];
+	}
+
+	public void bind(GL4ES3 gl) {
+		gl.glBindVertexArray(glId);
+	}
+
+	public void unbind(GL4ES3 gl) {
+		gl.glBindVertexArray(0);
+	}
+
+	public void delete(GL4ES3 gl) {
+		gl.glDeleteVertexArrays(1, new int[]{glId}, 0);
+	}
+}</code><br />
+					<p>
+						Now we need to create some data to put in the vertex buffer and configure
+						the vertex attributes. Then we can render! Let's go back into the game
+						class and add a couple fields:
+					</p>
+					<code>private VertexBuffer vertexBuffer;
+private VertexArray vertexArray;
+</code><br />
+					<p>
+						Then we'll set them up in init():
+					</p>
+					<code>GL4ES3 gl = drawable.getGL().getGL4ES3();
+// a square from (-0.75, -0.66) to (0.5, 0.33)
+float[] verts = new float[] {
+		-0.75f, -0.66f,
+		-0.75f, 0.33f,
+		0.5f, -0.66f,
+		0.5f, 0.33f
+};
+
+// Buffers is a JOGL helper class that makes sure buffers are configured correctly for your computer's architecture
+ByteBuffer buf = Buffers.newDirectByteBuffer(verts.length * 4);
+buf.asFloatBuffer().put(verts);
+vertexBuffer = new VertexBuffer(gl, buf, GL.GL_ARRAY_BUFFER, GL.GL_STATIC_DRAW);
+
+// bind the vertex array and vertex buffer before configuring the attribute, then unbind
+vertexArray = new VertexArray(gl);
+vertexArray.bind(gl);
+vertexBuffer.bind(gl);
+gl.glEnableVertexAttribArray(0);
+gl.glVertexAttribPointer(0, 2, GL.GL_FLOAT, false, 8, 0);
+vertexArray.unbind(gl);
+vertexBuffer.unbind(gl);
+				</code><br />
+					<p>
+						Now we just add a draw call after clearing the screen in display():
+					</p>
+					<code>vertexArray.bind(gl);
+vertexBuffer.bind(gl);
+gl.glDrawArrays(GL.GL_TRIANGLE_STRIP, 0, 4);</code><br/>
+					<p>
+						When I run the program now I see a black square with the rest of the window
+						still cycling between red and black.  Success!  Technically, OpenGL says
+						that rendering with no bound shader program is not an error but has
+						undefined results, so don't worry if you see something different.
+						we'll tackle shader programs in the next section.
+					</p>
 				</section>
 
 				<nav class="pgn">
