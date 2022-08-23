@@ -106,155 +106,147 @@
 					<h3>
 						Chapter 1 — Ultimate Tic Tac Toe
 					</h3>
-
 					<p>
-						I wanted to start this series with the simplest game I could think of. That was
-						Tic Tac Toe (or Noughts and Crosses outside the US.) But that isn't a very fun
-						game, and it's not very satisfying to create. So instead we'll be taking an extra
-						little step by starting with Ultimate Tic Tac Toe. It has some actual strategic depth
-						compared to the classic game with only a tiny bit more complexity.
+						This first chapter gets us off the ground with a very simple game,
+						<a href="https://en.wikipedia.org/wiki/Ultimate_tic-tac-toe">
+							Ultimate Tic Tac Toe</a>. I'll start by explaining some of the
+						most basic—and <em>most important</em>—design principles we'll use
+						throughout the rest of the series. The game won't look like much,
+						but that's intentional. I wanted to make something that would get
+						us started as quickly as possible.
 					</p>
 
+					<h5>Design Principles</h5>
 					<p>
-						Ultimate Tic Tac Toe starts with the familiar 3x3 grid in which two players alternately
-						place their marks: Xs and Os respectively. But in Ultimate TicTacToe, each square in the
-						grid actually contains a smaller 3x3 grid. The first starts by marking an X in one square in
-						any of the nine smaller grids that they choose. Turns alternate as normal, but each player
-						must place their mark in the grid that corresponds to the square that was marked in the pervious
-						player's turn. Each grid plays as a regular game of Tic Tac Toe. When a grid is won
-						by one of the players, it becomes that player's mark in the larger game. If a
-						player would be required to play a turn in a completed grid, they instead play in
-						any uncompleted grid without restriction. The game is won when a player wins the
-						larger game; which is, by winning three in a row of the smaller grids.
+						First let's define some terms. A <strong>Design Pattern</strong>
+						is a well-defined, general solution to a common problem. Using established
+						design patterns correctly is <em>crucial</em> when working on a development
+						team. But even if you're going solo it's very important to understand and
+						use these patterns. Doing so will make your codebase better (easier to work
+						with), which will make your game development easier and more enjoyable.
+					</p>
+					<p>
+						But before we talk about full design patterns, we need to establish some
+						<strong>principles</strong>. These are the guiding ideals for good code.
+						Following these design principles keeps us focused on the qualities of
+						"good code": organization, simplicity, correctness, robustness, efficiency,
+						and so on. Design patterns are built according to these principles, so
+						we have to understand the principles in order to utilize the patterns
+						effectively.
 					</p>
 
-					<section class="page-content">
-						<h5>Project Setup</h5>
-						<p>
-							I'll start by creating a new Maven project in IntelliJ called<br />game-architecture-basics.
-							The plan is to create a submodule for each game in the series, so go ahead and add one
-							now called tictactoe. All game-specific code goes in the src folder
-							for that game. As we work through the series we'll pull out as much general-purpose
-							code as we can and put it into the main module's src folder. In that way, we'll
-							be building up a library of useful tools as we build each game.
-						</p>
-						<p>
-							Next we need to include the necessary dependencies for using OpenGL to render into
-							a window. JOGL provides multiple options out-of-the-box for creating windows
-							and surfaces, so we'll use that. Add the dependencies block to the parent module's
-							pom.xml file:
-						</p>
+					<h6>Abstraction</h6>
+					<p>
+						If you take away nothing else from this series, learn this. Abstraction is
+						the cornerstone of everything in computing. It's all about hiding complex details
+						behind a simplified facade. Abstraction allows us to take a problem and break
+						it down into simpler pieces. If we've abstracted a problem effectively, we'll
+						have created a generalized tool that can be applied to other problems.
+					</p>
+					<p>
+						Java is the high-level language we'll use in this series to make games for
+						Android. Java is known as an <strong>Object-Oriented</strong> language.
+						That means its primary form of abstraction is the <em>object</em>.
+						A Java Object is a bundle of code and data that perform a particular task.
+						An object provides a <strong>public interface</strong>, which is how
+						other objects interact with it.  In other words, "public interface" is a term
+						we use to refer to all of an object's publicly-accessible members.
+					</p>
+					<p>
+						Java defines objects through <strong>Classes</strong> and <strong>
+							Interfaces</strong>. A class provides the definition of an object's type.
+						A Car class in Java might declare that Car objects can have things like
+						a make, a model, an engine type, a number of doors, or a color. You
+						could then create objects (or instances) of that class for each car
+						your program cares about. Those objects would then know <em>which</em>
+						make, model, engine, color, etc that particular car actually has.
+						So a class defines a <em>type</em> of thing, while an object represents
+						a particular <em>instance</em> of that type.
+					</p>
+					<p>
+						Java interfaces define a set of publicly-accessible methods.  An interface
+						on its own does nothing.  Its purpose is to be <strong>implemented</strong>
+						by one or more classes.  Classes that implement an interface are required
+						to provide method definitions that match those declared by the interface.
+						So the interface tells you what you can do with an object without needing
+						to know exactly how that gets done. So multiple objects that correctly
+						implement the same interface should be interchangeable in any context
+						where that interface is used.
+					</p>
+					<p>
+						Think of a car. A car is a complicated set of interacting systems that
+						accomplishes a given purpose (locomotion.) It has an engine and fuel 
+						system, a transmission system, an electrical system, an exhaust system,
+						a steering system, a braking system, a suspension system, and more. But
+						to drive a car you don't need to know how most of those systems work.
+						You need to understand how to use the accelerator, the brake, and the steering
+						wheel. Those comprise the interface you use to interact
+						with the whole system.  Once you know how to use that interface you should be
+						able to use any other machine that provides the same interface.  If you're
+						perceptive you may have noticed that cars actually have two different interfaces.
+						I described the interface for cars with automatic transmissions.  A manual
+						transmission has two more methods you have to understand; the stick shift and the
+						clutch.  And because those methods can't be ignored, it has to be a separate
+						interface.  The two are not interchangeable.
+					</p>
 
-						<code>&lt;dependencies&gt;
-	&lt;dependency&gt;
-		&lt;groupId&gt;org.jogamp.jogl&lt;/groupId&gt;
-		&lt;artifactId&gt;jogl-all-main&lt;/artifactId&gt;
-		&lt;version&gt;2.3.2&lt;/version&gt;
-	&lt;/dependency&gt;
-	&lt;dependency&gt;
-		&lt;groupId&gt;org.jogamp.gluegen&lt;/groupId&gt;
-		&lt;artifactId&gt;gluegen-rt-main&lt;/artifactId&gt;
-		&lt;version&gt;2.3.2&lt;/version&gt;
-	&lt;/dependency&gt;
-&lt;/dependencies&gt;</code>
-					</section>
+					<h6>Single Responsibility</h6>
+					<p>
+						This goes hand-in-hand with abstraction. The idea is that every distinct
+						<em>thing</em> you create should serve a single purpose. It should have
+						one single responsibility. It's the scope of those responsibilities that
+						will change. And it's just a stack of abstractions. At the top of
+						the stack, the highest level of abstraction, is our Game class. It's responsible
+						for running the entire game, but nothing else. It does that by using a Rendering
+						system, an Input system, an Audio system, etc. It knows how to use these systems
+						(through their interfaces), but it doesn't care how they work internally.  Each of
+						these systems in turn does only one thing within the Game. To do that they're
+						composed of smaller parts that each do only one thing within that system.
+						Get the idea? This goes all the way down to the lowest levels of our code.
+						(The term we use for low-level, less abstract things is <strong>concrete.</strong>)
+						When you create a new system, or class, or function, make sure it does only
+						one thing at the proper level of abstraction.
+					</p>
 
-					<section class="page-content">
-						<h5>Creating a Window</h5>
-						<p>
-							Now we're ready to start writing code! Create a package in your tictactoe project
-							with a class called TicTacToeGame:
-						</p>
-						<code>public class TicTacToeGame {
-	private GLWindow window;
-	private FPSAnimator animator;
+					<h6>Code Reuse</h6>
+					<p>
+						This one is also known as Don't Repeat Yourself. If you find yourself writing
+						a chunk of code you've written before <em>in a similar context</em>, it's time
+						to refactor. Tuck away that duplicate code in a function and call the function
+						in its place. If that isn't easy to do, you're probably
+						looking at a good place to add a new abstraction <em>or it's a symptom of poor
+							design choices.</em> But remember that note above about a similar context.
+						You'll end up writing many, many <samp>for</samp> loops, for example. That
+						doesn't mean you need to figure out how create a single abstraction so that
+						you never have to write another <samp>for</samp> loop again. Otherwise we
+						would already have that abstraction. But if you're writing multiple <samp>for</samp>
+						loops to iterate over the same structure, that can almost certainly be hidden
+						in an abstraction.
+					</p>
 
-	public TicTacToeGame() {
-		// JOGL uses profiles to represent the capabilities
-		// in particular versions of OpenGL.
-		// I'm using the GL4ES3 profile, which includes
-		// everything in OpenGL 4 that is also in OpenGL ES 3.
-		GLProfile profile = GLProfile.getGL4ES3();
-		
-		// the capabilities object allows you to request particular
-		// features. I'm just using the defaults for this profile.
-		GLCapabilities caps = new GLCapabilities(profile);
-		
-		// create a window with the requested capabilities and
-		// configure it
-		window = GLWindow.create(caps);
-		window.setTitle("Ultimate TicTacToe");
-		window.setSize(600, 800);
+					<h5>The Tutorial</h5>
+					<p>
+						With all those words out of the way, it's time to start writing code. You can
+						check <a href="">the repository</a> for my version of the game. Each tutorial
+						in the series will be a branch in the repo that continues from the previous one.
+					</p>
 
-		// a FPSAnimator is used to automatically trigger rendering
-		// at a particular framerate
-		animator = new FPSAnimator(window, 60, true);
-		window.setVisible(true);
-		animator.start();
-	}
+					<nav style="text-align:right"><a href="tictactoe_2.html">Part 2: Activity</a></nav>
+				</section>
 
-	public static void main(String[] args) {
-		TicTacToeGame game = new TicTacToeGame();
-	}
-}
-</code><br />
-						<p>
-							You should be able to run this program and get a window with a black background.
-							But if you close the window, you may notice that the program doesn't actually
-							stop completely. IntelliJ shows that it can still be stopped manually:
-						</p>
-						<p>
-							[INSERT PHOTO HERE]
-						</p>
-						<p>
-							This is because we started a FPSAnimator, which uses a thread to repeatedly
-							update the window. Since we never actually stopped the animator, we've leaked
-							a thread that will never die on its own. Let's stop it manually by clicking that
-							Stop button and then fix the problem.
-						</p>
-						<p>
-							All we have to do is call stop() on the Animator when the window is closing.
-							To receive notification of that we'll have the game class implement the
-							WindowListener interface and add it to the window. (Make sure you use the
-							WindowListener in com.jogamp.newt.event, not the one in java.awt.event.) Implement
-							all the interface's methods and call stop() on the animator inside
-							windowDestroyNotify().
-						</p>
-						<code>public class TicTacToeGame implements WindowListener {
+				<nav class="pgn">
+					<ul>
+						<li><span class="pgn__num current">1</span></li>
+						<li><a class="pgn__num" href="tictactoe_2.html">2</a></li>
+						<li><a class="pgn__num" href="#0">3</a></li>
+						<li><a class="pgn__num" href="#0">4</a></li>
+						<li><a class="pgn__num" href="#0">5</a></li>
+						<li><span class="pgn__num dots">…</span></li>
+						<li><a class="pgn__num" href="#0">8</a></li>
+						<li><a class="pgn__next" href="#0">Next</a></li>
+					</ul>
+				</nav>
 
-...
-
-// add this when configuring the window
-window.addWindowListener(this);
-
-...
-
-@Override
-public void windowDestroyNotify(WindowEvent e) {
-	animator.stop();
-}
-</code><br />
-
-						<p>
-							Now when we run the game and close the window it should completely kill the
-							program.
-						</p>
-						<nav style="text-align:right"><a href="tictactoe_2.html">Part 2: Rendering</a></nav>
-					</section>
-
-					<nav class="pgn">
-						<ul>
-							<li><span class="pgn__num current">1</span></li>
-							<li><a class="pgn__num" href="tictactoe_2.html">2</a></li>
-							<li><a class="pgn__num" href="#0">3</a></li>
-							<li><a class="pgn__num" href="#0">4</a></li>
-							<li><a class="pgn__num" href="#0">5</a></li>
-							<li><span class="pgn__num dots">…</span></li>
-							<li><a class="pgn__num" href="#0">8</a></li>
-							<li><a class="pgn__next" href="#0">Next</a></li>
-						</ul>
-					</nav>
-	
 			</div> <!-- end main -->
 
 

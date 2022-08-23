@@ -339,6 +339,7 @@ code {
     color: #272727;
     border-radius: 3px;
 	overflow-x: scroll;
+	tab-size: 4;
 }
 
 pre>code {
