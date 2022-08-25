@@ -122,7 +122,7 @@
 						is a well-defined, general solution to a common problem. Using established
 						design patterns correctly is <em>crucial</em> when working on a development
 						team. But even if you're going solo it's very important to understand and
-						use these patterns. Doing so will make your codebase better (easier to work
+						use these patterns. Doing so will make your codebase better (read: easier to work
 						with), which will make your game development easier and more enjoyable.
 					</p>
 					<p>
@@ -144,12 +144,23 @@
 						have created a generalized tool that can be applied to other problems.
 					</p>
 					<p>
-						Java is the high-level language we'll use in this series to make games for
-						Android. Java is known as an <strong>Object-Oriented</strong> language.
-						That means its primary form of abstraction is the <em>object</em>.
-						A Java Object is a bundle of code and data that perform a particular task.
+						Low levels of abstraction are "closer" to your machine's hardware. The
+						lower levels of your code know how to render simple shapes to your screen, or
+						how to play sounds and manipulate audio.
+					</p>
+					<p>
+						High levels of abstraction help us see the big picture, because those low-level
+						details are <em>abstracted away</em>, or hidden from view. Higher abstraction
+						helps us keep a larger mental model of the whole system because we don't have
+						to think about those low-level details if we've implemented the low-level systems
+						correctly.
+					</p>
+					<p>
+						Java is a high-level language that follows an <strong>object-oriented</strong>
+						Paradigm. That means its primary form of abstraction is the <strong>object</strong>.
+						A Java Object is a bundle of code and data that serves a particular purpose.
 						An object provides a <strong>public interface</strong>, which is how
-						other objects interact with it.  In other words, "public interface" is a term
+						other objects interact with it. In other words, "public interface" is a term
 						we use to refer to all of an object's publicly-accessible members.
 					</p>
 					<p>
@@ -164,30 +175,41 @@
 						a particular <em>instance</em> of that type.
 					</p>
 					<p>
-						Java interfaces define a set of publicly-accessible methods.  An interface
-						on its own does nothing.  Its purpose is to be <strong>implemented</strong>
-						by one or more classes.  Classes that implement an interface are required
+						Java interfaces define a set of publicly-accessible methods. An interface
+						on its own does nothing. Its purpose is to be <strong>implemented</strong>
+						by one or more classes. Classes that implement an interface are required
 						to provide method definitions that match those declared by the interface.
 						So the interface tells you what you can do with an object without needing
-						to know exactly how that gets done. So multiple objects that correctly
-						implement the same interface should be interchangeable in any context
-						where that interface is used.
+						to know exactly how that gets done. Multiple objects that correctly
+						implement the same interface should work interchangeably.
+					</p>
+					<p>
+						If, for example,
+						you're writing a game for multiple platforms, you could use interfaaces
+						to hide the platform-specific aspects of your rendering system. The rest of
+						the game's code only interacts with the rendering system through its interface,
+						so if you simply provide a different implementation on different platforms
+						you've successfully abstracted away the multi-platform details of rendering.
+						You don't have to think about it any more.
 					</p>
 					<p>
 						Think of a car. A car is a complicated set of interacting systems that
-						accomplishes a given purpose (locomotion.) It has an engine and fuel 
+						accomplishes a given purpose (locomotion.) It has an engine and fuel
 						system, a transmission system, an electrical system, an exhaust system,
 						a steering system, a braking system, a suspension system, and more. But
 						to drive a car you don't need to know how most of those systems work.
 						You need to understand how to use the accelerator, the brake, and the steering
 						wheel. Those comprise the interface you use to interact
-						with the whole system.  Once you know how to use that interface you should be
-						able to use any other machine that provides the same interface.  If you're
-						perceptive you may have noticed that cars actually have two different interfaces.
-						I described the interface for cars with automatic transmissions.  A manual
-						transmission has two more methods you have to understand; the stick shift and the
-						clutch.  And because those methods can't be ignored, it has to be a separate
-						interface.  The two are not interchangeable.
+						with the whole system. Once you know how to use that interface you should be
+						able to use any other machine that provides the same interface.
+					</p>
+					<p>
+						You may have noticed that example is incomplete, because there are actually
+						two different interfaces for cars.
+						I described the interface for cars with automatic transmissions. A manual
+						transmission has two more methods you have to understand: the stick shift and the
+						clutch. And because those methods can't be ignored, it has to be a separate
+						interface. The two are not interchangeable.
 					</p>
 
 					<h6>Single Responsibility</h6>
@@ -195,15 +217,14 @@
 						This goes hand-in-hand with abstraction. The idea is that every distinct
 						<em>thing</em> you create should serve a single purpose. It should have
 						one single responsibility. It's the scope of those responsibilities that
-						will change. And it's just a stack of abstractions. At the top of
+						will change. You can think of your game as a stack of abstractions.  At the top of
 						the stack, the highest level of abstraction, is our Game class. It's responsible
 						for running the entire game, but nothing else. It does that by using a Rendering
 						system, an Input system, an Audio system, etc. It knows how to use these systems
-						(through their interfaces), but it doesn't care how they work internally.  Each of
+						(through their interfaces), but it doesn't care how they work internally. Each of
 						these systems in turn does only one thing within the Game. To do that they're
 						composed of smaller parts that each do only one thing within that system.
 						Get the idea? This goes all the way down to the lowest levels of our code.
-						(The term we use for low-level, less abstract things is <strong>concrete.</strong>)
 						When you create a new system, or class, or function, make sure it does only
 						one thing at the proper level of abstraction.
 					</p>
@@ -226,9 +247,10 @@
 
 					<h5>The Tutorial</h5>
 					<p>
-						With all those words out of the way, it's time to start writing code. You can
-						check <a href="">the repository</a> for my version of the game. Each tutorial
-						in the series will be a branch in the repo that continues from the previous one.
+						With all those words out of the way, it's time to start writing code. Make
+						sure you've installed Android Studio and know how to create a project and
+						launch an app on your device.  The <a href="https://developer.android.com/training/basics/firstapp">
+						developer docs</a> are your friend.
 					</p>
 
 					<nav style="text-align:right"><a href="tictactoe_2.html">Part 2: Activity</a></nav>
